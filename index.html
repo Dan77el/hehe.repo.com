@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+<body>
+<strong><p>click here</p></strong>
+<a href="https://www.quihehehe.com">
+<img src="file:///C:/Users/HP/Desktop/website/index.html"></a>
+</body>
+</head>
+</html>
+
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Hehehe...</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #74ebd5 0%, #ACB6E5 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+  .kuis-container {
+    background: #fff;
+    max-width: 350px;
+    width: 100%;
+    border-radius: 15px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+    padding: 30px 25px;
+    display: flex;
+    flex-direction: column;
+  }
+  .kuis-header {
+    margin-bottom: 25px;
+  }
+  .pertanyaan {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0 0 15px 0;
+  }
+  .jawaban {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .jawaban li {
+    margin-bottom: 15px;
+  }
+  .jawaban-btn {
+    width: 100%;
+    padding: 14px 20px;
+    background: #f0f0f0;
+    border: 2px solid transparent;
+    border-radius: 10px;
+    font-size: 1rem;
+    color: #555;
+    cursor: pointer;
+    transition: background 0.3s ease, border-color 0.3s ease;
+    user-select: none;
+  }
+  .jawaban-btn:hover,
+  .jawaban-btn:focus {
+    background: #d1e7ff;
+    border-color: #3399ff;
+    outline: none;
+  }
+  .jawaban-btn.selected {
+    background: #3399ff;
+    color: white;
+    border-color: #1a73e8;
+  }
+  .jawaban-btn.benar {
+    background: #4caf50;
+    color: white;
+  }
+  .jawaban-btn.salah {
+    background: #e74c3c;
+    color: white;
+  }
+  .tombol-berikutnya {
+    margin-top: 20px;
+    padding: 14px 0;
+    background: #3399ff;
+    color: white;
+    font-weight: 600;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(51, 153, 255, 0.4);
+    transition: background 0.3s ease;
+    user-select: none;
+  }
+  .tombol-berikutnya:disabled {
+    background: #a9c9ff;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+  .tombol-berikutnya:hover:not(:disabled),
+  .tombol-berikutnya:focus:not(:disabled) {
+    background: #1a73e8;
+    outline: none;
+    box-shadow: 0 10px 30px rgba(26, 115, 232, 0.6);
+  }
+  .hasil {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #333;
+    text-align: center;
+    margin-top: 10px;
+  }
+  @media (max-height: 600px) {
+    body {
+      padding: 10px;
+    }
+    .kuis-container {
+      padding: 20px 20px;
+    }
+  }
+</style>
+</head>
+<body>
+  <main class="kuis-container" role="main" aria-label="Kuis Interaktif">
+    <section class="kuis-header">
+      <h2 class="pertanyaan" id="pertanyaan">Teks pertanyaan</h2>
+      <ul class="jawaban" id="jawaban">
+        <!-- Tombol jawaban akan dimasukkan di sini -->
+      </ul>
+    </section>
+    <button type="button" class="tombol-berikutnya" id="tombolBerikutnya" disabled>Soal Berikutnya...</button>
+    <p class="hasil" id="hasil" aria-live="polite"></p>
+  </main>
+
+  <script>
+    const dataKuis = [
+      {
+        pertanyaan: "2 3 ikan lele...",
+        jawaban: ["wahh....", "Cicak", "lele", "ikan"],
+        benar: 0
+      },
+      {
+        pertanyaan: "Warna kesukaan?",
+        jawaban: [
+          "Ga Tau",
+          "Pink",
+          "Hitam",
+          "Gelap"
+        ],
+        benar: 2
+      },
+      {
+        pertanyaan: "Nama anak nya Lebron james?",
+        jawaban: [
+          "Ga Tau",
+          "Cari Gugel",
+          "James Lebronsss",
+          "Jennsss"
+        ],
+        benar: 0
+      },
+      {
+        pertanyaan: "Penyanyi Terkenal?",
+        jawaban: ["Ayu Ding ding", "Iwan Fals", "Billie english", "Ga tau"],
+        benar: 1
+      }
+    ];
+
+    const pertanyaanEl = document.getElementById('pertanyaan');
+    const jawabanEl = document.getElementById('jawaban');
+    const tombolBerikutnya = document.getElementById('tombolBerikutnya');
+    const hasilEl = document.getElementById('hasil');
+
+    let indeksPertanyaan = 0;
+    let skor = 0;
+    let sudahMenjawab = false;
+
+    function muatPertanyaan() {
+      sudahMenjawab = false;
+      tombolBerikutnya.disabled = true;
+      hasilEl.textContent = '';
+      const sekarang = dataKuis[indeksPertanyaan];
+      pertanyaanEl.textContent = sekarang.pertanyaan;
+      jawabanEl.innerHTML = '';
+      sekarang.jawaban.forEach((pilihan, index) => {
+        const li = document.createElement('li');
+        const tombol = document.createElement('button');
+        tombol.textContent = pilihan;
+        tombol.classList.add('jawaban-btn');
+        tombol.setAttribute('type', 'button');
+        tombol.setAttribute('aria-pressed', 'false');
+        tombol.addEventListener('click', () => pilihJawaban(index, tombol));
+        li.appendChild(tombol);
+        jawabanEl.appendChild(li);
+      });
+    }
+
+    function pilihJawaban(indexDipilih, tombol) {
+      if (sudahMenjawab) return;
+      sudahMenjawab = true;
+      tombolBerikutnya.disabled = false;
+      const sekarang = dataKuis[indeksPertanyaan];
+      const tombolJawaban = jawabanEl.querySelectorAll('button');
+      tombolJawaban.forEach((btn, idx) => {
+        btn.disabled = true;
+        if (idx === sekarang.benar) {
+          btn.classList.add('benar');
+          btn.setAttribute('aria-pressed', 'true');
+        } else if (idx === indexDipilih) {
+          btn.classList.add('salah');
+          btn.setAttribute('aria-pressed', 'true');
+        }
+      });
+      if (indexDipilih === sekarang.benar) {
+        skor++;
+        hasilEl.textContent = "Nahhhh..!! Gitu dong..";
+        hasilEl.style.color = '#4caf50';
+      } else {
+        hasilEl.textContent = `yang bener jawab nya...! Harus nya Jawabannya: ${sekarang.jawaban[sekarang.benar]}`;
+        hasilEl.style.color = '#e74c3c';
+      }
+    }
+
+    tombolBerikutnya.addEventListener('click', () => {
+      indeksPertanyaan++;
+      if (indeksPertanyaan < dataKuis.length) {
+        muatPertanyaan();
+      } else {
+        tampilkanHasilAkhir();
+      }
+    });
+
+    function tampilkanHasilAkhir() {
+      pertanyaanEl.textContent = "Kuisnya Selesai!";
+      jawabanEl.innerHTML = '';
+      tombolBerikutnya.style.display = 'none';
+      hasilEl.style.color = '#333';
+      hasilEl.textContent = `Skor Kamu: ${skor} dari ${dataKuis.length}`;
+    }
+
+    muatPertanyaan();
+  </script>
+</body>
+</html>
+</content>
+</create_file>
